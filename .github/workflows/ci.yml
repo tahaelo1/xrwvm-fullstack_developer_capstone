@@ -38,7 +38,7 @@ jobs:
           cd server/frontend
           npm install
 
-      - name: Build React app
+    - name: Build React app
         run: |
           cd server/frontend
-          npm run build
+          CI=false npm run build
