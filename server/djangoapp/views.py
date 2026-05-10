@@ -1,9 +1,6 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, login, authenticate
-from django.contrib import messages
-from datetime import datetime
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -44,7 +41,7 @@ def registration(request):
     try:
         User.objects.get(username=username)
         username_exist = True
-    except:
+    except Exception:
         logger.debug("{} is new user".format(username))
     if not username_exist:
         user = User.objects.create_user(
@@ -89,6 +86,7 @@ def get_dealer_details(request, dealer_id):
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
 
+
 @csrf_exempt
 def add_review(request):
     if not request.user.is_anonymous:
@@ -96,14 +94,14 @@ def add_review(request):
         try:
             post_review(data)
             return JsonResponse({"status": 200})
-        except:
+        except Exception:
             return JsonResponse({"status": 401, "message": "Error in posting review"})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
 
 
 def get_cars(request):
-    from .models import CarMake, CarModel
+    from .models import CarModel
     car_models = CarModel.objects.select_related('car_make')
     cars = [{"CarModel": cm.name, "CarMake": cm.car_make.name, "CarYear": cm.year} for cm in car_models]
     return JsonResponse({"CarModels": cars})

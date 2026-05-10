@@ -1,8 +1,4 @@
 import requests
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 backend_url = "http://localhost:3030"
 sentiment_analyzer_url = "http://localhost:5050/"
